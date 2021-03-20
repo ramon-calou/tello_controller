@@ -1,0 +1,19 @@
+<launch>
+	
+	<arg name="show_image" default="1" />
+	
+    <rosparam file="$(find tello_controller)/cfg/tello_test.yaml" />
+	
+    <node name="extract_image_info" 
+        pkg="tello_controller" 
+        type="extract_image_info.py"
+        output="screen"
+        args="$(arg show_image)">
+
+	<remap from="image_raw" to="tello/camera/image_raw"/>
+	<remap from="goal_centroid" to="/camera/img_centroid"/>
+	<remap from="goal_base" to="/camera/img_base"/>
+
+	</node>
+	
+</launch>

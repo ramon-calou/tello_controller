@@ -1,0 +1,29 @@
+<launch>
+
+   
+    <arg name="K_eu" default="0.25" />
+    <arg name="K_ev" default="0.25" />
+    <arg name="X_goal" default="320" />
+    <arg name="Y_goal" default="480" />
+    <arg name="max_lin" default="0.5" />
+    <arg name="max_ang" default="0.5" />   
+    <arg name="camera_height" default="0.1"/>
+    
+
+ 	<arg name="path" default="$(find tello_controller)/cfg/"/>
+   
+    <node name="tello_drone_control_signal" 
+        pkg="tello_controller" 
+        type="tello_drone_control_signal.py"
+        args="$(arg K_eu) $(arg K_ev) $(arg X_goal) $(arg Y_goal) 
+        	 $(arg max_lin) $(arg max_ang) $(arg camera_height)"
+        output="screen">
+
+	<remap from="img_point" to="/camera/img_base"/>
+	<remap from="odom" to="/tello/odom"/>
+	<remap from="cmd_vel" to="/tello/cmd_vel"/>
+	<remap from="camera_info" to="/tello/camera/camera_info"/>
+
+	</node>
+	
+</launch>
