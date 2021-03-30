@@ -12,7 +12,7 @@
 #    * Updated to Python3 and ROS Noetic    #
 #                                           #
 # Author: Adalberto Oliveira                #
-# Autonomous Vehicle - Infnet	            #
+# Autonomous Vehicle - Infnet	             #
 # Version: 1.1                              #
 # Date: 13 mar 2021                         #
 #                                           #
@@ -26,6 +26,7 @@ import image_lib_v2 as img
 from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
+from time import sleep
 
 def callback_img(msg):
 
@@ -35,7 +36,7 @@ def callback_img(msg):
     bridge = CvBridge()
 
     # receive the ros image mesage and convert to bgr, ohta and hsv  
-    input_img = bridge.imgmsg_to_cv2(msg,desired_encoding="bgr8")   
+    input_img = bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
 
 def camera_main():
 
@@ -62,11 +63,15 @@ def camera_main():
     
     # Subscribers
     rospy.Subscriber('image_raw', Image, callback_img)
- 
+
+    # Load the cascade
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
     # control rate
     rate = rospy.Rate(30)   # run the node at 15H
     pub_img = Image()
     input_img = []
+    gray = 0
 
     # variables of flow control 
     time.sleep(1)
@@ -79,7 +84,17 @@ def camera_main():
         mask = []
         centroid = []
         base = []
-
+        #gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+        #time.sleep(2)
+        #faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4, minSize=(30, 30))
+        # Draw the rectangle around each face
+        #for (x, y, w, h) in faces:
+        #    cv2.rectangle(input_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        # Display
+        #cv2.imshow('img', input_img)
+        # Stop if escape key is pressed
+        #cv2.waitKey(30) 
+        
         for i in range(num_masks):        
             try:
                 
@@ -133,6 +148,9 @@ def camera_main():
             cv2.namedWindow('Centroides')
             cv2.imshow('Centroides',img_cont)
             cv2.waitKey(1)   
+
+            cv2.namedWindow('gray')
+            cv2.imshow('gray',gray)
         
         rate.sleep()
 
