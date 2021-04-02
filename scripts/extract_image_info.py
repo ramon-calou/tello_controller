@@ -107,10 +107,6 @@ def camera_main():
                 # Getting base points
                 b_, img_cont = img.get_base(img_cont,mask[i])
                 
-                cv2.namedWindow('Centroides')
-                cv2.imshow('Centroides',img_cont)
-                cv2.waitKey(1) 
-
                 # add points
                 centroid.append(cent_)
                 base.append(b_)
@@ -120,7 +116,6 @@ def camera_main():
                 centroid = None
                 base = None
                 img_cont = input_img
-                print('mask nok')
 
         # Prepating publishing objects
         goal_centroid = Pose2D()
@@ -148,10 +143,10 @@ def camera_main():
             cv2.namedWindow('Centroides')
             cv2.imshow('Centroides',img_cont)
             cv2.waitKey(1)   
-
+            '''
             cv2.namedWindow('gray')
             cv2.imshow('gray',gray)
-        
+            '''
         rate.sleep()
 
 

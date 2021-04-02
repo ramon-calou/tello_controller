@@ -30,8 +30,8 @@ gray = 0
 rospy.init_node('extract_image_info_node', anonymous=True)
 
 # Publishers
-pub_goal_centroid = rospy.Publisher('goal_centroid', Pose2D, queue_size=10)  # send control signals
-pub_goal_base = rospy.Publisher('goal_base', Pose2D, queue_size=10)  # send control signals
+#pub_goal_centroid = rospy.Publisher('goal_centroid', Pose2D, queue_size=10)  # send control signals
+#pub_goal_base = rospy.Publisher('goal_base', Pose2D, queue_size=10)  # send control signals
 
 rospy.Subscriber('/tello/camera/image_raw', Image, callback_img)  
 rate = rospy.Rate(30) 

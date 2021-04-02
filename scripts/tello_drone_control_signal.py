@@ -45,7 +45,6 @@ def callback_camera_info(msg):
     camera_matrix[1] = u0
     camera_matrix[2] = v0
 
-
 def callback_img_point(msg):
     """
     This function receives the goal and saves it 
@@ -77,26 +76,6 @@ def callback_img_point(msg):
     except:
         pass
 
-
-def callback_odom(msg):
-   
-    global robot_pose
-    
-    robot_pose.x = round(msg.pose.pose.position.x, 3)
-    robot_pose.y = round(msg.pose.pose.position.y, 3)
-    
-    q = [msg.pose.pose.orientation.x, 
-        msg.pose.pose.orientation.y, 
-        msg.pose.pose.orientation.z, 
-        msg.pose.pose.orientation.w]
-
-    euler = tf.transformations.euler_from_quaternion(q)
-    
-    theta = round(euler[2],3)
-    
-    robot_pose.theta = theta
-
-
 def control_robot():
     """
     This function is called from the main conde and calls 
@@ -119,7 +98,6 @@ def control_robot():
     
     # Subscribers
     rospy.Subscriber('img_point',Pose2D, callback_img_point)   # receives the goal coordinates
-    rospy.Subscriber('odom', Odometry, callback_odom)    # receives thr robot odometry
     rospy.Subscriber('camera_info',CameraInfo, callback_camera_info)   # receives the goal coordinates
 
     # Publishers
@@ -134,8 +112,7 @@ def control_robot():
         # Computing the control signal
         control_signal = Twist()
         
-        # Selecting the controller
-        # calling IBVS
+        #Foi utilizado o método IBVS para realização do controle do drone
 
         try:
             if mask_is_true:
@@ -161,16 +138,15 @@ def control_robot():
 ############ MAIN CODE #######################
 # initializing Global variables
 # Readin from launch
-K_eu = float(sys.argv[1])   # Control gain for linear velocity
-K_ev = float(sys.argv[2])   # Control gain for angular velocity
+K_eu = float(sys.argv[1])   # Ganho de velocidade linear
+K_ev = float(sys.argv[2])   # Ganho de velocidade angular
 X_goal = float(sys.argv[3])
 Y_goal = float(sys.argv[4])
-max_lin = float(sys.argv[5])
-max_ang = float(sys.argv[6])
+max_lin = float(sys.argv[5]) #Velocidade máxima linear
+max_ang = float(sys.argv[6]) #Velocidade máxima angular
 camera_height = float(sys.argv[7])
 
 # Inner values
-robot_pose = Pose2D()
 image_point = Pose2D()
 gains_cart = [K_eu, K_ev]
 img_goal = Pose2D()
@@ -203,9 +179,3 @@ print('#############################################',
 
 if __name__ == '__main__':
     control_robot()
-    '''
-    try:
-        control_robot()
-    except:
-        print('Node ended.')
-    '''
